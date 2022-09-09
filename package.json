@@ -1,0 +1,12 @@
+{
+    "name": "ksqldb_subflows",
+    "description": "subflows on Node-RED to interact with ksqlDB",
+    "version": "0.0.1",
+    "dependencies": {},
+    "node-red": {
+        "settings": {
+            "flowFile": "flow.json",
+            "credentialsFile": "flow_cred.json"
+        }
+    }
+}

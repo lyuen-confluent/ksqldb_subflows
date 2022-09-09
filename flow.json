@@ -1,0 +1,739 @@
+[
+    {
+        "id": "6260d6ebee9c62f9",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "336fe522995ac618",
+        "type": "subflow",
+        "name": "ksqlDB Query (HTTP)",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 40,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "7a8805549583cc74"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 900,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "851e7284cf5bc1c7",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 890,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "5502b1faa266bc90",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "outputLabels": [
+            "resultset",
+            "header"
+        ],
+        "icon": "font-awesome/fa-database",
+        "status": {
+            "x": 1000,
+            "y": 100,
+            "wires": [
+                {
+                    "id": "851e7284cf5bc1c7",
+                    "port": 0
+                },
+                {
+                    "id": "5502b1faa266bc90",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "788f5c6dd1a16320",
+        "type": "subflow",
+        "name": "ksqlDB Query (CURL)",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 40,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "3898f6d4db07e823"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1100,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "d4d52388ccd8cc6a",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1090,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "356406be7272df45",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1090,
+                "y": 180,
+                "wires": [
+                    {
+                        "id": "e515f7547a66e244",
+                        "port": 1
+                    }
+                ]
+            },
+            {
+                "x": 1110,
+                "y": 240,
+                "wires": [
+                    {
+                        "id": "e515f7547a66e244",
+                        "port": 2
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "outputLabels": [
+            "resultset",
+            "header",
+            "stderr",
+            "return code"
+        ],
+        "icon": "font-awesome/fa-database",
+        "status": {
+            "x": 640,
+            "y": 260,
+            "wires": [
+                {
+                    "id": "e515f7547a66e244",
+                    "port": 2
+                },
+                {
+                    "id": "e515f7547a66e244",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "7a8805549583cc74",
+        "type": "http request",
+        "z": "336fe522995ac618",
+        "name": "push query",
+        "method": "POST",
+        "ret": "bin",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 190,
+        "y": 100,
+        "wires": [
+            [
+                "3f3435dcb6c1f8b9"
+            ]
+        ]
+    },
+    {
+        "id": "3f3435dcb6c1f8b9",
+        "type": "split",
+        "z": "336fe522995ac618",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 330,
+        "y": 100,
+        "wires": [
+            [
+                "cee937e7f346dcfe"
+            ]
+        ]
+    },
+    {
+        "id": "cee937e7f346dcfe",
+        "type": "json",
+        "z": "336fe522995ac618",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 450,
+        "y": 100,
+        "wires": [
+            [
+                "cd4bd19fe6d78f8a"
+            ]
+        ]
+    },
+    {
+        "id": "cd4bd19fe6d78f8a",
+        "type": "switch",
+        "z": "336fe522995ac618",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "istype",
+                "v": "array",
+                "vt": "array"
+            },
+            {
+                "t": "istype",
+                "v": "object",
+                "vt": "object"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 610,
+        "y": 100,
+        "wires": [
+            [
+                "851e7284cf5bc1c7"
+            ],
+            [
+                "5502b1faa266bc90"
+            ]
+        ]
+    },
+    {
+        "id": "851e7284cf5bc1c7",
+        "type": "function",
+        "z": "336fe522995ac618",
+        "name": "resultset",
+        "func": "var keys = global.get(msg.queryName).columnNames;\nvar values = msg.payload\n\nmsg.payload = Object.fromEntries(keys.map((k, i) => [k, values[i]]));\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5502b1faa266bc90",
+        "type": "function",
+        "z": "336fe522995ac618",
+        "name": "header",
+        "func": "//var queryName = msg.queryName;\nglobal.set(msg.queryName, msg.payload)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e515f7547a66e244",
+        "type": "exec",
+        "z": "788f5c6dd1a16320",
+        "command": "curl --silent --no-buffer -X POST -d",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "true",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "push query",
+        "x": 390,
+        "y": 140,
+        "wires": [
+            [
+                "b15b4a670363428d"
+            ],
+            [],
+            []
+        ],
+        "icon": "font-awesome/fa-play"
+    },
+    {
+        "id": "b15b4a670363428d",
+        "type": "split",
+        "z": "788f5c6dd1a16320",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": true,
+        "addname": "",
+        "x": 550,
+        "y": 80,
+        "wires": [
+            [
+                "2f730ea017a25435"
+            ]
+        ]
+    },
+    {
+        "id": "2f730ea017a25435",
+        "type": "json",
+        "z": "788f5c6dd1a16320",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 670,
+        "y": 80,
+        "wires": [
+            [
+                "7445c93ec6bc4df5"
+            ]
+        ]
+    },
+    {
+        "id": "7445c93ec6bc4df5",
+        "type": "switch",
+        "z": "788f5c6dd1a16320",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "istype",
+                "v": "array",
+                "vt": "array"
+            },
+            {
+                "t": "istype",
+                "v": "object",
+                "vt": "object"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 790,
+        "y": 80,
+        "wires": [
+            [
+                "d4d52388ccd8cc6a"
+            ],
+            [
+                "356406be7272df45"
+            ]
+        ]
+    },
+    {
+        "id": "3898f6d4db07e823",
+        "type": "change",
+        "z": "788f5c6dd1a16320",
+        "name": "query payload",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "msg.payload & ' ' & msg.url",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 220,
+        "y": 140,
+        "wires": [
+            [
+                "e515f7547a66e244"
+            ]
+        ]
+    },
+    {
+        "id": "d4d52388ccd8cc6a",
+        "type": "function",
+        "z": "788f5c6dd1a16320",
+        "name": "resultset",
+        "func": "var keys = global.get(msg.queryName).columnNames;\nvar values = msg.payload\n\nmsg.payload = Object.fromEntries(keys.map((k, i) => [k, values[i]]));\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "356406be7272df45",
+        "type": "function",
+        "z": "788f5c6dd1a16320",
+        "name": "header",
+        "func": "//var queryName = msg.queryName;\nglobal.set(msg.queryName, msg.payload)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bd313c95456039fa",
+        "type": "subflow:788f5c6dd1a16320",
+        "z": "6260d6ebee9c62f9",
+        "name": "",
+        "x": 380,
+        "y": 220,
+        "wires": [
+            [
+                "0ad951f39ea6193e"
+            ],
+            [
+                "627774f75f3e34f1"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "b342e1569ae2af68",
+        "type": "inject",
+        "z": "6260d6ebee9c62f9",
+        "name": "start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "url",
+                "v": "http://ksqldb-server:8088/query-stream",
+                "vt": "str"
+            },
+            {
+                "p": "queryName",
+                "v": "personStats",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"sql\":\"SELECT * FROM person_stats EMIT CHANGES;\",\"properties\":{\"ksql.streams.auto.offset.reset\":\"earliest\"}}",
+        "payloadType": "str",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "bd313c95456039fa"
+            ]
+        ]
+    },
+    {
+        "id": "0ad951f39ea6193e",
+        "type": "debug",
+        "z": "6260d6ebee9c62f9",
+        "name": "resultset",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "627774f75f3e34f1",
+        "type": "debug",
+        "z": "6260d6ebee9c62f9",
+        "name": "header",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "8d5024567bf49b30",
+        "type": "subflow:336fe522995ac618",
+        "z": "6260d6ebee9c62f9",
+        "name": "",
+        "x": 380,
+        "y": 540,
+        "wires": [
+            [
+                "1bf4b5acf0f3a476"
+            ],
+            [
+                "077c32d2ba4f9f1c"
+            ]
+        ]
+    },
+    {
+        "id": "acee7e428e5d9425",
+        "type": "inject",
+        "z": "6260d6ebee9c62f9",
+        "name": "start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "url",
+                "v": "http://ksqldb-server:8088/query-stream",
+                "vt": "str"
+            },
+            {
+                "p": "queryName",
+                "v": "personStatsLimit",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"sql\": \"SELECT * FROM person_stats;\",\"properties\": { \"ksql.streams.auto.offset.reset\": \"latest\"} }",
+        "payloadType": "str",
+        "x": 150,
+        "y": 540,
+        "wires": [
+            [
+                "8d5024567bf49b30"
+            ]
+        ]
+    },
+    {
+        "id": "1bf4b5acf0f3a476",
+        "type": "debug",
+        "z": "6260d6ebee9c62f9",
+        "name": "resultset",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "077c32d2ba4f9f1c",
+        "type": "debug",
+        "z": "6260d6ebee9c62f9",
+        "name": "header",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "66a4abacfd476a4c",
+        "type": "inject",
+        "z": "6260d6ebee9c62f9",
+        "name": "stop",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "url",
+                "v": "http://ksqldb-server:8088/close-query",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "personStats",
+        "payloadType": "global",
+        "x": 150,
+        "y": 340,
+        "wires": [
+            [
+                "5d800364496ec7c2"
+            ]
+        ]
+    },
+    {
+        "id": "5d800364496ec7c2",
+        "type": "json",
+        "z": "6260d6ebee9c62f9",
+        "name": "",
+        "property": "payload",
+        "action": "str",
+        "pretty": false,
+        "x": 290,
+        "y": 340,
+        "wires": [
+            [
+                "fcc72d1b5651e0aa"
+            ]
+        ]
+    },
+    {
+        "id": "fcc72d1b5651e0aa",
+        "type": "http request",
+        "z": "6260d6ebee9c62f9",
+        "name": "ksqlDB",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 440,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "43ee9a7b529d28e1",
+        "type": "inject",
+        "z": "6260d6ebee9c62f9",
+        "name": "kill",
+        "props": [
+            {
+                "p": "kill",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 260,
+        "wires": [
+            [
+                "bd313c95456039fa"
+            ]
+        ]
+    },
+    {
+        "id": "968e3c372b6bbca0",
+        "type": "comment",
+        "z": "6260d6ebee9c62f9",
+        "name": "For Pull and Push Query",
+        "info": "",
+        "x": 170,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "85c9e4aeb55c5d90",
+        "type": "comment",
+        "z": "6260d6ebee9c62f9",
+        "name": "For Pull Query only",
+        "info": "",
+        "x": 150,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "855eb983d9f0e64c",
+        "type": "comment",
+        "z": "6260d6ebee9c62f9",
+        "name": "Stop by Query ID",
+        "info": "",
+        "x": 100,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "d9a0200582d519ae",
+        "type": "comment",
+        "z": "6260d6ebee9c62f9",
+        "name": "Stop by Killing curl",
+        "info": "",
+        "x": 110,
+        "y": 220,
+        "wires": []
+    }
+]
